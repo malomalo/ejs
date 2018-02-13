@@ -1,0 +1,30 @@
+{
+  "name": "ejs",
+  "version": "1.0.0",
+  "description": "Embedded JavaScript Templates",
+  "keywords": [
+    "template",
+    "engine",
+    "ejs"
+  ],
+  "author": "Jon Bracy <jonbracy@gmail.com> (https://malomalo.io)",
+  "license": "MIT",
+  "main": "dist/ejs.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/malomalo/ejs.git"
+  },
+  "dependencies": {
+    "@babel/core": "^7.0.0-beta.40"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.40",
+    "@babel/register": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "mocha": "^5.0.0"
+  },
+  "scripts": {
+    "test": "mocha",
+    "build": "mkdir -p dist && babel --no-babelrc lib/ejs.js -o dist/ejs.js --presets @babel/env && babel --no-babelrc lib/babel-plugin.js -o dist/babel-plugin.js --presets @babel/env"
+  }
+}
