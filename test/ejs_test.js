@@ -39,6 +39,32 @@ describe('EJS', function() {
     assert.equal(ejs.render(template, {formTag: formTag}), '<form><input value="1"></form>');
   });
   
+  it('supports "subtemplates" with an if', function() {
+    var formTag = function(template) {
+      return '<form>' + template(1) + '</form>';
+    }
+    
+    var template = `<%= formTag(function(f) { %><% if (f == 1) {%>if<% } %><% }) %>`
+    assert.equal(ejs.render(template, {formTag: formTag}), '<form>if</form>');
+    
+    var template = `<%= formTag(function(f) { %><% if (f == 2) {%>if<% } else { %>else<% } %><% }) %>`
+    assert.equal(ejs.render(template, {formTag: formTag}), '<form>else</form>');
+    
+    var formTag = function(templateA, templateB) {
+      return '<form>' + templateA() + '</form>' + templateB();
+    }
+    var template = `<%= formTag(function(f) { %>a<% }, function(f) { %>b<% }) %>`
+    assert.equal(ejs.render(template, {formTag: formTag}), '<form>a</form>b');
+  });
+
+  it('supports multiple "subtemplates"', function() {
+    var formTag = function(templateA, templateB) {
+      return '<form>' + templateA() + '</form>' + templateB();
+    }
+    var template = `<%= formTag(function(f) { %>a<% }, function(f) { %>b<% }) %>`
+    assert.equal(ejs.render(template, {formTag: formTag}), '<form>a</form>b');
+  });
+
   describe('#transform()', function() {
   });
 

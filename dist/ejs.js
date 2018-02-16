@@ -156,13 +156,23 @@ function functionSource(source, options) {
         var last = stack.pop();
 
         if (last === 'output') {
-          output += "    return __output.join(\"\");\n" + segment + '\n);\n';
+          if (segment.match(/\{\s*$/)) {
+            output += "    return __output.join(\"\");\n" + segment + '\n';
+            output += "var __output = [];\n";
+            output += "function __append(s) { if (s !== undefined && s != null) { __output.push(String(s)); } }\n";
+          } else {
+            output += "    return __output.join(\"\");\n" + segment + '\n);\n';
+          }
         } else {
           output += segment + '\n';
         }
+
+        if (segment.match(/\{\s*$/)) {
+          stack.push(last);
+        }
       } else {
         if (modifier == 'output') {
-          if (segment.match(/\{\s*$/)) {
+          if (segment.match(/function\s*\([\s\S]*\)\s*\{\s*$/)) {
             output += '__append(' + segment + '\n';
             output += "var __output = [];\n";
             output += "function __append(s) { if (s !== undefined && s != null) { __output.push(String(s)); } }\n";
